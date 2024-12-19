@@ -1,0 +1,50 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Action": [
+            "secretsmanager:ListSecrets",
+            "iam:ListUsers",
+            "iam:ListRoles",
+            "iam:ListPolicies",
+            "iam:ListGroups"
+          ],
+          "Effect": "Allow",
+          "Resource": "*"
+        },
+        {
+          "Action": [
+            "iam:ListUserPolicies",
+            "iam:ListAttachedUserPolicies",
+            "iam:GetUserPolicy",
+            "iam:GetUser"
+          ],
+          "Effect": "Allow",
+          "Resource": "${OrigUserArn}"
+        },
+        {
+          "Action": [
+            "iam:ListPolicyVersions",
+            "iam:GetPolicyVersion",
+            "iam:GetPolicy"
+          ],
+          "Effect": "Allow",
+          "Resource": [
+            "${TargetPolicyArn}",
+            "${StartPolicyArn}"
+          ]
+        },
+        {
+          "Action": [
+            "iam:UpdateAssumeRolePolicy",
+            "iam:ListRolePolicies",
+            "iam:ListAttachedRolePolicies",
+            "iam:GetRolePolicy",
+            "iam:GetRole",
+            "iam:AssumeRole"
+          ],
+          "Effect": "Allow",
+          "Resource": "${TargetRoleArn}"
+        }
+    ]
+}

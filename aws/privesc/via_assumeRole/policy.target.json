@@ -1,0 +1,14 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "secretsmanager:GetSecretValue",
+            "Effect": "Allow",
+            "Resource": "${SecretArn}",
+            "Condition": {
+                "DateGreaterThan": {"aws:CurrentTime": "${TimeNow}"},
+                "DateLessThan": {"aws:CurrentTime": "${TimeEnd}"}
+            }
+        }
+    ]
+}

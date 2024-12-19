@@ -1,0 +1,52 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowAssumeRole",
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Resource": "arn:aws:iam::${AccountId}:role/${RoleName}",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "EXTERNAL-ID",
+                    "sts:SourceIdentity": "arn:aws:sts::${AccountId}:assumed-role/${RoleName}/${SessionName}"
+                }
+            }
+        },
+        {
+            "Sid": "ReadTheFlag",
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:ListSecrets",
+                "secretsmanager:ListSecretVersionIds"
+            ],
+            "Resource": [
+                "${FlagArn}"
+            ],
+            "Condition": {
+                "DateGreaterThan": {"aws:CurrentTime": "${TimeNow}"},
+                "DateLessThan": {"aws:CurrentTime": "${TimeEnd}"}
+            }
+        },
+        {
+            "Sid": "AllowSelfInspection",
+            "Effect": "Allow",
+            "Action": [
+                "sts:GetCallerIdentity"
+            ],
+            "Resource": [
+                "${TargetRoleArn}",
+                "${OrigUserArn}"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "EXTERNAL-ID"
+                }
+            }
+        }
+    ]
+}

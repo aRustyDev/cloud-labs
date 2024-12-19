@@ -15,7 +15,10 @@ locals {
       TimeEnd    = var.time.end
       SecretArn  = module.setup.secret_arn
       Region     = local.region
-      Account    = local.account_id
+      AccountId  = local.account_id
+      PermissionsBoundaryPolicyArn = "${local.policy_arn_prefix}/boundary"
+      RoleName   = "${local.tags.lab_id}-${local.lab_category}-${local.lab_name}"
+      SessionName   = "${local.tags.lab_id}-${local.lab_category}-${local.lab_name}"
     })
     boundary = templatefile("${path.module}/policy.boundary.json", {
       AccountId     = local.account_id # TODO: Might need to add ability to specify this?
@@ -27,6 +30,8 @@ locals {
       FlagArn       = module.setup.flag_arn
       TimeNow       = var.time.now
       TimeEnd       = var.time.end
+      TargetPolicyArn = "${local.policy_arn_prefix}/target"
+      StartPolicyArn  = "${local.policy_arn_prefix}/start"
     })
   }
   account_id   = data.aws_caller_identity.current.account_id

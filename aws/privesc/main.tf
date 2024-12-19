@@ -2,6 +2,7 @@ module "via_assumeRole" {
   source = "./via_assumeRole"
   count  = var.target_lab == "via_assumeRole" ? 1 : 0
 
+  time = var.time
   tags = var.tags
 }
 

@@ -2,12 +2,53 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "AllowAssumeRole",
-            "Effect": "Allow",
+            "Sid": "AllowBasicEnumeration",
             "Action": [
-                "sts:AssumeRole"
+                "secretsmanager:ListSecrets",
+                "iam:ListUsers",
+                "iam:ListRoles",
+                "iam:ListPolicies",
+                "iam:ListGroups"
             ],
-            "Resource": "arn:aws:iam::${AccountId}:role/${RoleName}",
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowEnumerateUserPolicies",
+            "Action": [
+                "iam:ListUserPolicies",
+                "iam:ListAttachedUserPolicies",
+                "iam:GetUserPolicy",
+                "iam:GetUser"
+            ],
+            "Effect": "Allow",
+            "Resource": "${OrigUserArn}"
+        },
+        {
+            "Sid": "AllowEnumeratePolicyVersions",
+            "Action": [
+                "iam:ListPolicyVersions",
+                "iam:GetPolicyVersion",
+                "iam:GetPolicy"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${TargetPolicyArn}",
+                "${StartPolicyArn}"
+            ]
+        },
+        {
+            "Sid": "AllowPrivEscViaAssumeRole",
+            "Action": [
+                "iam:UpdateAssumeRolePolicy",
+                "iam:ListRolePolicies",
+                "iam:ListAttachedRolePolicies",
+                "iam:GetRolePolicy",
+                "iam:GetRole",
+                "iam:AssumeRole"
+            ],
+            "Effect": "Allow",
+            "Resource": "${TargetRoleArn}",
             "Condition": {
                 "StringEquals": {
                     "sts:ExternalId": "EXTERNAL-ID",
@@ -28,8 +69,12 @@
                 "${FlagArn}"
             ],
             "Condition": {
-                "DateGreaterThan": {"aws:CurrentTime": "${TimeNow}"},
-                "DateLessThan": {"aws:CurrentTime": "${TimeEnd}"}
+                "DateGreaterThan": {
+                    "aws:CurrentTime": "${TimeNow}"
+                },
+                "DateLessThan": {
+                    "aws:CurrentTime": "${TimeEnd}"
+                }
             }
         },
         {

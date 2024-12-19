@@ -6,8 +6,16 @@
             "Effect": "Allow",
             "Resource": "${SecretArn}",
             "Condition": {
-                "DateGreaterThan": {"aws:CurrentTime": "${TimeNow}"},
-                "DateLessThan": {"aws:CurrentTime": "${TimeEnd}"}
+                "DateGreaterThan": {
+                    "aws:CurrentTime": "${TimeNow}"
+                },
+                "DateLessThan": {
+                    "aws:CurrentTime": "${TimeEnd}"
+                },
+                "StringEquals": {
+                    "iam:PermissionsBoundary": "${PermissionsBoundaryPolicyArn}",
+                    "sts:SourceIdentity": "arn:aws:sts::${AccountId}:assumed-role/${RoleName}/${SessionName}"
+                }
             }
         }
     ]
